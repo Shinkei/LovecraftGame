@@ -22,16 +22,16 @@ var gameState = {
     preload: function() { // where all the requirements are loaded before the game starts
         this.load.image('background', BACKGROUND);
         // Load the images that represents the characters
-        this.load.image('brown-jenkin', BROWN_JENKIN);
+        this.load.image('brown_jenkin', BROWN_JENKIN);
         this.load.image('cthulhu', CTHULHU);
         this.load.image('dagon', DAGON);
-        this.load.image('devils-reef', DEVILS_REEF);
-        this.load.image('edward-derby', EDWARD_DERBY);
-        this.load.image('nahum-gardner', NAHUM_GARDNER);
+        this.load.image('devils_reef', DEVILS_REEF);
+        this.load.image('edward_derby', EDWARD_DERBY);
+        this.load.image('nahum_gardner', NAHUM_GARDNER);
         this.load.image('nyarlathotep', NYARLATHOTEP);
-        this.load.image('wilbur-whateley', WILBUR_WHATELEY);
-        this.load.image('yog-sothoth', YOG_SOTHOTH);
-        this.load.image('zadok-allen', ZADOK_ALLEN);
+        this.load.image('wilbur_whateley', WILBUR_WHATELEY);
+        this.load.image('yog_sothoth', YOG_SOTHOTH);
+        this.load.image('zadok_allen', ZADOK_ALLEN);
         this.load.image('arrow', ARROW);
 
     },
@@ -40,22 +40,38 @@ var gameState = {
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL; // adjust the game to the screen device
         this.scale.pageAlignHorizontally = true; // set the game aligned in the center horizontally
         this.scale.pageAlignVertically = true; // set the game aligner in the center vertically
-
+        
         this.background = this.game.add.sprite(0, 0, 'background');
+        
+        // create a group of objects that represents the characters
+        var charactersObject = [
+            {key: 'brown_jenkin', text: 'BROWN_JENKIN'},
+            {key: 'cthulhu', text: 'CTHULHU'},
+            {key: 'dagon', text: 'DAGON'},
+            {key: 'devils_reef', text: 'DEVILS_REEF'},
+            {key: 'edward_derby', text: 'EDWARD_DERBY'},
+            {key: 'nahum_gardner', text: 'NAHUM_GARDNER'},
+            {key: 'nyarlathotep', text: 'NYARLATHOTEP'},
+            {key: 'wilbur_whateley', text: 'WILBUR_WHATELEY'},
+            {key: 'yog_sothoth', text: 'YOG_SOTHOTH'},
+            {key: 'zadok_allen', text: 'ZADOK_ALLEN'}
+        ];
+        this.characters = this.game.add.group();
+        // loop over the character list and render the sprite
+        for(let element of charactersObject){
+            let character = this.characters.create(-160, this.game.world.centerY, element.key); // we render the characters but outside the screen
 
-        // characters
-        this.brown_jenkin = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'brown-jenkin');
-        this.brown_jenkin.anchor.setTo(0.5, 0.5); // change image anchor point, 0 means the most left, 1 the most right, 0.5 the middle
-        // if we are using the same number for x and y we can put it only once
-        this.brown_jenkin.scale.setTo(3); // scale the image, 1 is normal, bigger numbers make it grow and smaller make it reduce
-        // to flip an immage you have to scale it in only one sise with -1, eg: scale.setTo(-1, 1).
+            character.anchor.setTo(0.5);
+            character.scale.setTo(2);
+            character.customParams = {text: element.text};
 
-        this.brown_jenkin.angle = -45; // rotates the image, around the anchor point -45 grades
+            character.inputEnabled = true;
+            character.input.pixelPerfectClick = true;
+            character.events.onInputDown.add(this.animateAnimal, this);
+        }
 
-        //temporal animation
-        this.brown_jenkin.inputEnabled = true;
-        this.brown_jenkin.input.pixelPerfectClick = true;
-        this.brown_jenkin.events.onInputDown.add(this.animateAnimal, this);
+        this.currentCharacter = this.characters.next();
+        this.currentCharacter.position.setTo(this.game.world.centerX, this.game.world.centerY);
 
         // left arrow
         this.left_arrow = this.game.add.sprite(60, this.game.world.centerY, 'arrow');
@@ -65,7 +81,7 @@ var gameState = {
 
         this.left_arrow.inputEnabled = true;
         this.left_arrow.input.pixelPerfectClick = true; // make the click martch perfectly the image and not the whole rectangle
-        this.left_arrow.events.onInputDown.add(this.switchAnimal, this); // add the function to the event
+        this.left_arrow.events.onInputDown.add(this.previousAnimal, this); // add the function to the event
         // right arrow
         this.right_arrow = this.game.add.sprite(580, this.game.world.centerY, 'arrow');
         this.right_arrow.anchor.setTo(0.5);
@@ -73,13 +89,20 @@ var gameState = {
         
         this.right_arrow.inputEnabled = true;
         this.right_arrow.input.pixelPerfectClick = true;
-        this.right_arrow.events.onInputDown.add(this.switchAnimal, this);
+        this.right_arrow.events.onInputDown.add(this.nextAnimal, this);
     },
     update: function() { // every change the game excecutes this method
-        this.brown_jenkin.angle += 0.5;
+        this.currentCharacter.angle += 0.5;
     },
-    switchAnimal: function(sprite, event) {
-        console.log('move animal');
+    nextAnimal: function(sprite, event) { // hide the current character, get the next fromthe group and position it in the middle of the screen
+        this.currentCharacter.position.setTo(-160, this.game.world.centerY);
+        this.currentCharacter = this.characters.next();
+        this.currentCharacter.position.setTo(this.game.world.centerX, this.game.world.centerY);
+    },
+    previousAnimal: function(sprite, event) {
+        this.currentCharacter.position.setTo(-160, this.game.world.centerY);
+        this.currentCharacter = this.characters.previous();
+        this.currentCharacter.position.setTo(this.game.world.centerX, this.game.world.centerY);
     },
     animateAnimal: function (sprite, event) {
         console.log('animate animal');
