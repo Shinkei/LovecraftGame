@@ -95,14 +95,35 @@ var gameState = {
         this.currentCharacter.angle += 0.5;
     },
     nextAnimal: function(sprite, event) { // hide the current character, get the next fromthe group and position it in the middle of the screen
-        this.currentCharacter.position.setTo(-210, this.game.world.centerY);
+        if (this.isAnimationRunning) {
+            return false;
+        }
+        this.isAnimationRunning = true;
+        let oldCharMovement = this.game.add.tween(this.currentCharacter);
+        oldCharMovement.to({x: -210});
+        oldCharMovement.start();
+        // this.currentCharacter.position.setTo(-210, this.game.world.centerY);
         this.currentCharacter = this.characters.next();
-        this.currentCharacter.position.setTo(this.game.world.centerX, this.game.world.centerY);
+        this.currentCharacter.position.setTo(this.game.world.width + 210, this.game.world.centerY);
+        let newCharMovement = this.game.add.tween(this.currentCharacter);
+        newCharMovement.to({ x: this.game.world.centerX });
+        newCharMovement.onComplete.add(() => { this.isAnimationRunning = false }); // call this function when the animation is completed
+        newCharMovement.start();
     },
     previousAnimal: function(sprite, event) {
-        this.currentCharacter.position.setTo(-210, this.game.world.centerY);
+        if(this.isAnimationRunning){
+            return false;
+        }
+        this.isAnimationRunning = true;
+        let oldCharMovement = this.game.add.tween(this.currentCharacter);
+        oldCharMovement.to({ x: this.game.world.width + 210 });
+        oldCharMovement.start();
         this.currentCharacter = this.characters.previous();
-        this.currentCharacter.position.setTo(this.game.world.centerX, this.game.world.centerY);
+        this.currentCharacter.position.setTo(-210, this.game.world.centerY);
+        let newCharMovement = this.game.add.tween(this.currentCharacter);
+        newCharMovement.to({ x: this.game.world.centerX });
+        newCharMovement.onComplete.add(() => { this.isAnimationRunning = false}); // call this function when the animation is completed
+        newCharMovement.start();
     },
     animateAnimal: function (sprite, event) {
         console.log('animate animal');
