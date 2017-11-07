@@ -59,7 +59,7 @@ var gameState = {
         this.characters = this.game.add.group();
         // loop over the character list and render the sprite
         for(let element of charactersObject){
-            let character = this.characters.create(-160, this.game.world.centerY, element.key); // we render the characters but outside the screen
+            let character = this.characters.create(-210, this.game.world.centerY, element.key); // we render the characters but outside the screen
 
             character.anchor.setTo(0.5);
             character.scale.setTo(2);
@@ -95,12 +95,12 @@ var gameState = {
         this.currentCharacter.angle += 0.5;
     },
     nextAnimal: function(sprite, event) { // hide the current character, get the next fromthe group and position it in the middle of the screen
-        this.currentCharacter.position.setTo(-160, this.game.world.centerY);
+        this.currentCharacter.position.setTo(-210, this.game.world.centerY);
         this.currentCharacter = this.characters.next();
         this.currentCharacter.position.setTo(this.game.world.centerX, this.game.world.centerY);
     },
     previousAnimal: function(sprite, event) {
-        this.currentCharacter.position.setTo(-160, this.game.world.centerY);
+        this.currentCharacter.position.setTo(-210, this.game.world.centerY);
         this.currentCharacter = this.characters.previous();
         this.currentCharacter.position.setTo(this.game.world.centerX, this.game.world.centerY);
     },
