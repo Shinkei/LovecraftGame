@@ -22,16 +22,16 @@ var gameState = {
     preload: function() { // where all the requirements are loaded before the game starts
         this.load.image('background', BACKGROUND);
         // Load the images that represents the characters
-        this.load.image('brown_jenkin', BROWN_JENKIN);
-        this.load.image('cthulhu', CTHULHU);
-        this.load.image('dagon', DAGON);
-        this.load.image('devils_reef', DEVILS_REEF);
-        this.load.image('edward_derby', EDWARD_DERBY);
-        this.load.image('nahum_gardner', NAHUM_GARDNER);
-        this.load.image('nyarlathotep', NYARLATHOTEP);
-        this.load.image('wilbur_whateley', WILBUR_WHATELEY);
-        this.load.image('yog_sothoth', YOG_SOTHOTH);
-        this.load.image('zadok_allen', ZADOK_ALLEN);
+        this.load.spritesheet('brown_jenkin', BROWN_JENKIN, 98, 66,3);
+        this.load.spritesheet('cthulhu', CTHULHU, 106, 106, 4);
+        this.load.spritesheet('dagon', DAGON, 96, 103, 4);
+        this.load.spritesheet('devils_reef', DEVILS_REEF, 140, 116, 4);
+        this.load.spritesheet('edward_derby', EDWARD_DERBY, 120, 147, 4);
+        this.load.spritesheet('nahum_gardner', NAHUM_GARDNER, 162, 169, 4);
+        this.load.spritesheet('nyarlathotep', NYARLATHOTEP, 68, 132, 4);
+        this.load.spritesheet('wilbur_whateley', WILBUR_WHATELEY, 70, 146, 3);
+        this.load.spritesheet('yog_sothoth', YOG_SOTHOTH,111, 95,3);
+        this.load.spritesheet('zadok_allen', ZADOK_ALLEN, 141, 111, 3);
         this.load.image('arrow', ARROW);
 
     },
@@ -68,6 +68,14 @@ var gameState = {
             character.inputEnabled = true;
             character.input.pixelPerfectClick = true;
             character.events.onInputDown.add(this.animateAnimal, this);
+
+            // create character animation
+            if (element.key === 'brown_jenkin' | element.key === 'wilbur_whateley' | element.key === 'yog_sothoth' | element.key === 'zadok_allen'){
+                character.animations.add('animate', [0, 1, 2, 1, 0], 3,            false);
+                //                        key       frames to show   frames x sec, is it going to loop?
+            } else{
+                character.animations.add('animate', [0, 1, 2, 3, 2, 1, 0], 4, false);
+            }
         }
 
         this.currentCharacter = this.characters.next();
@@ -92,7 +100,7 @@ var gameState = {
         this.right_arrow.events.onInputDown.add(this.nextAnimal, this);
     },
     update: function() { // every change the game excecutes this method
-        this.currentCharacter.angle += 0.5;
+        //this.currentCharacter.angle += 0.5;
     },
     nextAnimal: function(sprite, event) { // hide the current character, get the next fromthe group and position it in the middle of the screen
         if (this.isAnimationRunning) {
@@ -126,7 +134,7 @@ var gameState = {
         newCharMovement.start();
     },
     animateAnimal: function (sprite, event) {
-        console.log('animate animal');
+        sprite.play('animate');
     }
 };
 
