@@ -4,7 +4,7 @@
   "description": "Simple game with animals made with phaser",
   "main": "game.js",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack && cp index.html dist/index.html",
     "start": "webpack-dev-server --open"
   },
   "keywords": [
