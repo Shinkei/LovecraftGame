@@ -17,9 +17,9 @@
     "phaser": "^2.6.2"
   },
   "devDependencies": {
-    "file-loader": "^1.1.5",
+    "file-loader": "^6.2.0",
     "script-loader": "^0.7.2",
-    "webpack": "^3.8.1",
+    "webpack": "^5.75.0",
     "webpack-dev-server": "^2.9.3"
   }
 }
